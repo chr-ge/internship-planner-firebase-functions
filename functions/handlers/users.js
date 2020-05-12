@@ -22,7 +22,7 @@ exports.signup = (request, response) => {
     let token, userId;
     db
         .doc(`/users/${newUser.handle}`).get()
-        .then(doc => {
+        .then((doc) => {
             if(doc.exists){
                 return response.status(400).json({ handle: 'This handle is already taken.' });
             }
@@ -32,12 +32,12 @@ exports.signup = (request, response) => {
                     .createUserWithEmailAndPassword(newUser.email, newUser.password)
             }
         })
-        .then(data => {
+        .then((data)=> {
             userId = data.user.uid;
             return data.user.getIdToken();
         })
-        .then(idToken => {
-            token = token;
+        .then((idToken) => {
+            token = idToken;
             const userCredentials = {
                 handle: newUser.handle,
                 email: newUser.email,
@@ -50,7 +50,7 @@ exports.signup = (request, response) => {
         .then(() => {
             return response.status(201).json({ token });
         })
-        .catch(error => {
+        .catch((error) => {
             console.log(error);
             if(error.code === 'auth/email-already-in-use'){
                 return response.status(400).json({ email: 'Email is already in use.'});
